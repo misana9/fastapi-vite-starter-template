@@ -1,5 +1,5 @@
 from pwdlib import PasswordHash
-from backend import schemas
+import schemas
 
 password_hash = PasswordHash.recommended()
 

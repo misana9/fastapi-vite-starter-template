@@ -1,10 +1,10 @@
 from fastapi import APIRouter,Depends,HTTPException,status
 from sqlalchemy.orm import Session
-from ..database import get_db
+from database import get_db
 from fastapi.security import OAuth2PasswordRequestForm
-from backend import schemas, utils, oauth2, models
+import schemas, utils, oauth2, models
 from datetime import timedelta
-from ..config import settings
+from config import settings
 
 SECRET_KEY = settings.secret_key
 ALGORITHM = settings.algorithm

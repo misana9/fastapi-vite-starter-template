@@ -1,10 +1,10 @@
 import jwt
 from jwt.exceptions import InvalidTokenError
 from datetime import timedelta,datetime,timezone
-from .config import settings
-from . import schemas,models
+from config import settings
+import schemas,models
 from fastapi import Depends,HTTPException,status
-from .database import get_db
+from database import get_db
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
 
