@@ -15,18 +15,19 @@ router = APIRouter()
 @router.post("/login")
 async def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db : Session = Depends(get_db) ):
     user = oauth2.get_user(db, user_credentials.username)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    # authenticate_user(db, user.email, user.password)
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = oauth2.create_access_token(
-        data={"user_id": user.id}, expires_delta=access_token_expires
+    if user:
+        verified = utils.authenticate_user(db,user,user_credentials.password)
+        if verified:
+            access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+            access_token = oauth2.create_access_token(
+                data={"user_id": user.id}, expires_delta=access_token_expires
+            )
+            return {"access_token": access_token, "token_type" : "bearer"}
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Incorrect username or password",
+        headers={"WWW-Authenticate": "Bearer"},
     )
-    return {"access_token": access_token, "token_type" : "bearer"}
 
 @router.post("/register")
 async def register(user: schemas.userRegister,db : Session = Depends(get_db)):

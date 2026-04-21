@@ -10,11 +10,7 @@ def verify_password(plain_password, hashed_password):
     return password_hash.verify(plain_password, hashed_password)
 
 
-def authenticate_user(db, username: str, password: str, hashed):
-    user = get_user(db, username)
-    if not user:
-        verify_password(password, hashed)
+def authenticate_user(db, user : schemas.user, password):
+    if not verify_password(password, user.password):
         return False
-    if not verify_password(password, user.hashed_password):
-        return False
-    return user
+    return True
